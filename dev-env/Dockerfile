@@ -67,10 +67,10 @@ RUN dpkg --add-architecture i386 \
     && groupadd _1000 -g 1000 \
     && groupadd _2000 -g 2000 \
     && groupadd _999 -g 999 \
-    && useradd -ms /bin/bash coder -g _1001 -G _1000,_2000,_999 \
-    && printf "coder:coder" | chpasswd \
-    && adduser coder sudo \
-    && printf "coder ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
+    && useradd -ms /bin/bash me -g _1001 -G _1000,_2000,_999 \
+    && printf "me:me" | chpasswd \
+    && adduser me sudo \
+    && printf "me ALL= NOPASSWD: ALL\\n" >> /etc/sudoers \
     && wget --no-check-certificate --quiet -O /tmp/pyenv-installer https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer \
     && chmod +x /tmp/pyenv-installer \
     && /tmp/pyenv-installer \
@@ -82,17 +82,17 @@ RUN dpkg --add-architecture i386 \
     && pip install -q --no-cache-dir conan conan-package-tools cmake==${CMAKE_VERSION_FULL} \
     && pip install pycapnp \
     && pip install git+https://github.com/tal-systems/tal-conan-utils \
-    && chown -R coder:1001 /opt/pyenv \
+    && chown -R me:1001 /opt/pyenv \
     && find /opt/pyenv -iname __pycache__ -print0 | xargs -0 rm -rf \
     && update-alternatives --install /usr/bin/python python /opt/pyenv/shims/python 100 \
     && update-alternatives --install /usr/bin/python3 python3 /opt/pyenv/shims/python3 100 \
     && update-alternatives --install /usr/bin/pip pip /opt/pyenv/shims/pip 100 \
     && update-alternatives --install /usr/bin/pip3 pip3 /opt/pyenv/shims/pip3 100
 
-USER coder
-WORKDIR /home/coder
+USER me
+WORKDIR /home/me
 
-RUN mkdir -p /home/coder/.conan \
+RUN mkdir -p /home/me/.conan \
     && printf 'eval "$(pyenv init -)"\n' >> ~/.bashrc \
     && printf 'eval "$(pyenv virtualenv-init -)"\n' >> ~/.bashrc \
     && conan profile new default --detect \
